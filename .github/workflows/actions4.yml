@@ -1,0 +1,21 @@
+name: actions4
+on: workflow_dispatch 
+jobs:
+  Deploy-to-Dev:
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      - name: deploy
+        run: echo "Deploying to Dev"
+  Deploy-to-QA:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy2
+        run: echo "Qa deployment in progress"      
+  Deploy-to-Prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy2
+        run: echo "Production deployment in progress"      
+  
+  
