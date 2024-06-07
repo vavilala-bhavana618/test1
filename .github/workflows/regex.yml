@@ -1,0 +1,30 @@
+name: Test JIRA Input
+
+on:
+  workflow_dispatch:
+    inputs:
+      jira_issues_or_release_version:
+        description: 'Comma-separated JIRA issues or JIRA release version'
+        required: true
+      jira_project:
+        description: 'JIRA Project (Required if a release version is provided)'
+        required: false
+
+jobs:
+  test_input:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine input type
+        run: |
+          if [[ "${{ github.event.inputs.jira_issues_or_release_version }}" =~ ^[A-Z]+-[0-9]+(,[A-Z]+-[0-9]+)*$ ]]; then
+            echo "Input is a list of JIRA issues."
+          elif [[ "${{ github.event.inputs.jira_issues_or_release_version }}" =~ ^[A-Z]+-[A-Z]+-[0-9]+\.[0-9]+$ ]]; then
+            echo "Input is a JIRA release version."
+            if [[ -z "${{ github.event.inputs.jira_project }}" ]]; then
+              echo "Error: You must provide a JIRA project when providing a JIRA release version."
+              exit 1
+            fi
+          else
+            echo "Error: Invalid input. Please provide either a comma-separated list of JIRA issues or a JIRA release version."
+            exit 1
+          fi
